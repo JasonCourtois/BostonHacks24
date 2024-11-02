@@ -1,1 +1,3 @@
 venv/
+TestVideos/
+db.sqlite3
