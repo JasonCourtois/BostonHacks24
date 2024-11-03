@@ -1,5 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
+import { useSchool } from '../hooks/SchoolContextProvider';
 
 interface CircularProgressProps {
   percentage: number; // Value from 0 to 100
@@ -9,13 +10,14 @@ interface CircularProgressProps {
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
   percentage,
-  size = 120,
-  strokeWidth = 8,
+  size = 160,
+  strokeWidth = 25,
 }) => {
   const data = [
     { value: percentage },
     { value: 100 - percentage },
   ];
+  const { selectedColors } = useSchool();
 
   return (
     <div className="relative flex justify-center items-center" style={{ width: size, height: size }}>
@@ -29,7 +31,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           outerRadius={size / 2}
           paddingAngle={5}
         >
-          <Cell fill="#4f46e5" /> {/* Primary progress color */}
+          <Cell fill={selectedColors?.accent} /> {/* Primary progress color */}
           <Cell fill="#d1d5db" /> {/* Background color */}
         </Pie>
       </PieChart>

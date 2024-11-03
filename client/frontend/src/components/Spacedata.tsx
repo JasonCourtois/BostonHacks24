@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Image } from "react-bootstrap";
 import { useSchool } from "../hooks/SchoolContextProvider";
 import {
   BarChart,
@@ -37,6 +38,25 @@ const SpaceData: React.FC = () => {
   const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
   const [selectedDay, setSelectedDay] = useState(currentDay);
   const [formatData, setFormatData] = useState<FormattedData[]>([]);
+  const [logoURL, setLogoURL] = useState("");
+
+  useEffect(() => {
+    if (!selectedSchool) {
+      return;
+    }
+    const getLogo = async () => {
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/api/schools/${selectedSchool?.name}`
+        );
+        const data = await response.json();
+        setLogoURL(`http://127.0.0.1:8000${data.logo_url}`);
+      } catch (error) {
+        console.error("Error fetching colors:", error);
+      }
+    };
+    getLogo();
+  }, [selectedSchool]);
 
   useEffect(() => {
     if (!selectedSchool?.name || !selectedSpace?.name) {
@@ -85,12 +105,20 @@ const SpaceData: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex gap-10">
-        <p>{spaceData.name}</p>
-        <CircularProgress percentage={(spaceData.current_count / spaceData.max_capacity) * 100}/>
+      <div className="flex gap-10 mb-3">
+        <div>
+          <p>Current {spaceData.name} Usage:</p>
+          <CircularProgress
+            percentage={
+              (spaceData.current_count / spaceData.max_capacity) * 100
+            }
+          />
+        </div>
+
+        {logoURL && <Image src={logoURL} alt="School Logo" width={"300px"} />}
       </div>
       <div className="w-full">
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart data={formatData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="hour" />
@@ -98,12 +126,19 @@ const SpaceData: React.FC = () => {
             <Tooltip />
             <Legend
               formatter={(value) => (
-                <span style={{ color: selectedColors?.text }}> {/* Change legend color here */}
+                <span style={{ color: selectedColors?.text }}>
+                  {" "}
+                  {/* Change legend color here */}
                   {value}
                 </span>
               )}
             />
-            <Bar dataKey="value" fill={selectedColors?.accent} name="Percent Used"/> {/* Bar color */}
+            <Bar
+              dataKey="value"
+              fill={selectedColors?.accent}
+              name="Percent Used"
+            />{" "}
+            {/* Bar color */}
           </BarChart>
         </ResponsiveContainer>
       </div>

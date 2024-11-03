@@ -4,7 +4,6 @@ import { Nav, NavDropdown, Navbar, Container, Image } from "react-bootstrap";
 
 const SiteNavbar: React.FC = () => {
   const { selectedSchool, setSelectedSchool, selectedColors, setSelectedColors, setSelectedSpace } = useSchool();
-  const [logoURL, setLogoURL] = useState("");
   const [schools, setSchools] = useState<string[]>([]);
 
   useEffect(() => {
@@ -17,9 +16,6 @@ const SiteNavbar: React.FC = () => {
         const response = await fetch(`http://127.0.0.1:8000/api/schools/${selectedSchool?.name}`);
         const data = await response.json();
         setSelectedColors({accent: data.primary_color, text: data.text_color})
-        setLogoURL(
-       `http://127.0.0.1:8000${data.logo_url}`
-        );
       } catch (error) {
         console.error("Error fetching colors:", error);
       }
@@ -56,9 +52,9 @@ const SiteNavbar: React.FC = () => {
   }, []);
 
   return (
-    <Navbar expand="lg" className="color-transition" style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
+    <Navbar expand="lg" className="color-transition shadow-md mb-4" style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
       <Container>
-      <Navbar.Brand href="/">Study Spaces</Navbar.Brand>
+      <Navbar.Brand href="/"><p className="p-0 m-0 font-semibold">Study Spaces</p></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

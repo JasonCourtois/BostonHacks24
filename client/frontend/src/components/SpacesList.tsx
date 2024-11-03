@@ -26,10 +26,10 @@ const SpacesList: React.FC = () => {
   }, [selectedSchool]);
 
   return (
-    <div style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
+    <div className="p-3 m-4 rounded-md shadow-lg" style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
       <p>Select a Space!</p>
       {spaces && spaces.map((space, index) => (
-        <p key={index} onClick={() => setSelectedSpace({name: space})}>{space}</p>
+        <p key={index} className="cursor-pointer bg-gray-200 hover:bg-gray-300 max-h-screen overflow-y-auto rounded-md text-center" onClick={() => setSelectedSpace({name: space})}>{space}</p>
       ))}
     </div>
   );
