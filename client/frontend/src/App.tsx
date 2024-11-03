@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSchool } from "./hooks/SchoolContextProvider";
-import Navbar from "./components/ui/SiteNavbar";
+import Navbar from "./components/SiteNavbar";
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
