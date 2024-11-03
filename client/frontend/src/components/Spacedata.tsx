@@ -39,7 +39,15 @@ const SpaceData: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState(currentDay);
   const [formatData, setFormatData] = useState<FormattedData[]>([]);
   const [logoURL, setLogoURL] = useState("");
-  const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const week = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   useEffect(() => {
     if (!selectedSchool) {
@@ -94,7 +102,7 @@ const SpaceData: React.FC = () => {
       });
       setFormatData(formattedData);
     }
-  }, [spaceData]);
+  }, [spaceData, selectedDay]);
 
   if (!spaceData) {
     return (
@@ -107,7 +115,13 @@ const SpaceData: React.FC = () => {
   return (
     <div className="md:ml-5 flex flex-col w-full">
       <div className="flex flex-col md:flex-row justify-center items-center gap-10 mb-3">
-      {logoURL && <Image src={logoURL} alt="School Logo" className="w-[200px] h-[100px] md:w-[300px] md:h-auto" />}
+        {logoURL && (
+          <Image
+            src={logoURL}
+            alt="School Logo"
+            className="w-[200px] h-[100px] md:w-[300px] md:h-auto"
+          />
+        )}
         <div>
           <p className="font-semibold">Current {spaceData.name} Usage:</p>
           <CircularProgress
@@ -116,10 +130,11 @@ const SpaceData: React.FC = () => {
             }
           />
         </div>
-        
       </div>
       <div className="w-full flex flex-col">
-        <p className="text-lg font font-semibold">Last <span>{currentDay}'s</span> Usage:</p>
+        <p className="text-lg font font-semibold">
+          Last <span>{currentDay}'s</span> Usage:
+        </p>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={formatData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -128,10 +143,7 @@ const SpaceData: React.FC = () => {
             <Tooltip />
             <Legend
               formatter={(value) => (
-                <span style={{ color: selectedColors?.text }}>
-                  {" "}
-                  {value}
-                </span>
+                <span style={{ color: selectedColors?.text }}> {value}</span>
               )}
             />
             <Bar
@@ -142,6 +154,24 @@ const SpaceData: React.FC = () => {
             {/* Bar color */}
           </BarChart>
         </ResponsiveContainer>
+        <div className="flex justify-center gap-3">
+          {week.map((day) => (
+            <button
+              key={day}
+              onClick={() => setSelectedDay(day)}
+              style={{
+                padding: "10px 15px",
+                borderRadius: "5px",
+                backgroundColor: selectedColors?.accent,
+                color: selectedColors?.text,
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
