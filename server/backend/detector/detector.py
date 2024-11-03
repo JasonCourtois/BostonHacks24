@@ -2,7 +2,6 @@ from box import *
 import capture
 import cv2
 from tracker import *
-import yt_dlp
 
 
 min_contour_area = 10000
@@ -59,7 +58,8 @@ def analyzeCapture(cap: cv2.VideoCapture, exitPosition: Position):
 
 def main():
     print("\n\nRunning detect\n\n\n")
-    cap = capture.captureFromFilepath("backend/detector/demovideos/test1.mp4")
+    cap = cv2.VideoCapture(2)
+    print("waht")
     analyzeCapture(cap, Position.LEFT)
     print("done")
 
