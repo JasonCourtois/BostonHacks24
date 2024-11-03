@@ -2,7 +2,7 @@ from box import *
 import math
 import position
 from rectangle import *
-
+import requests
 
 minFramesExisting = 20
 minDistBetweenEqualRectangles = 50
@@ -57,9 +57,11 @@ class EuclideanDistTracker:
                         if new_pos == self.exitPosition:
                             # INCREASE COUNTER
                             self.counter -= 1
+                            response = requests.get("http://127.0.0.1:8000/api/schools/BU/spaces/Home%20Sudy%20Space/decrement")
                         else:
                             # DECREASE COUNTER
                             self.counter += 1
+                            response = requests.get("http://127.0.0.1:8000/api/schools/BU/spaces/Home%20Sudy%20Space/increment")
                     # print(self.previous_boxes)
                     returnBoxes.append(prev_box)
                     same_object_detected = True

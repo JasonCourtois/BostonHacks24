@@ -58,7 +58,7 @@ def analyzeCapture(cap: cv2.VideoCapture, exitPosition: Position):
 
 def main():
     print("\n\nRunning detect\n\n\n")
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     print("waht")
     analyzeCapture(cap, Position.LEFT)
     print("done")
