@@ -26,12 +26,13 @@ def get_school_data(request, schoolname):
         school = School.objects.get(name=schoolname)
     except School.DoesNotExist:
         raise Http404("School not found")
-
+    
     # Prepare the response data
     response_data = {
         'name': school.name,
         'primary_color': school.primary_color,
         'text_color': school.text_color,
+        'logo_url': school.logo.url, #Return path here to logo in my static folder
     }
 
     return JsonResponse(response_data)

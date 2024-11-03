@@ -8,7 +8,7 @@ class Amenity(models.Model):
 
 class School(models.Model):
     name = models.CharField(max_length=255, primary_key=True)
-    logo = models.ImageField(upload_to='logos/')
+    logo = models.ImageField(upload_to='static/')
     primary_color = models.CharField(max_length=7)  # Store as hex code, e.g., "#004F9F"
     text_color = models.CharField(max_length=7)     # Store as hex code, e.g., "#FFFFFF"
 
@@ -19,6 +19,20 @@ class Space(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, related_name='spaces')
     name = models.CharField(max_length=255)  # Removed primary_key=True
     amenities = models.ManyToManyField(Amenity, related_name='spaces')
+    stream_link = models.CharField(max_length=255, default="https://youtube.com")
+
+    EXIT_POSITION_CHOICES = [
+        ('top', 'Top'),
+        ('left', 'Left'),
+        ('bottom', 'Bottom'),
+        ('right', 'Right'),
+    ]
+    exit_position = models.CharField(
+        max_length=10,
+        choices=EXIT_POSITION_CHOICES,
+        default='top'
+    )
+
     current_count = models.IntegerField(default=1)
     max_capacity = models.IntegerField(default=1)
     week_history = models.JSONField(default=dict)  # Dictionary with timestamps and counts

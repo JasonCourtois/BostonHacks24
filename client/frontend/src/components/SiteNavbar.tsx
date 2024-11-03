@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSchool } from "../hooks/SchoolContextProvider";
-import { Nav, NavDropdown, Navbar, Container } from "react-bootstrap";
+import { Nav, NavDropdown, Navbar, Container, Image } from "react-bootstrap";
 
 const SiteNavbar: React.FC = () => {
-  const { selectedSchool, setSelectedSchool } = useSchool();
-  const [accentColor, setAccentColor] = useState("");
-  const [textColor, setTextColor] = useState("");
+  const { selectedSchool, setSelectedSchool, selectedColors, setSelectedColors } = useSchool();
+  const [logoURL, setLogoURL] = useState("");
   const [schools, setSchools] = useState<string[]>([]);
 
   useEffect(() => {
@@ -17,8 +16,10 @@ const SiteNavbar: React.FC = () => {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/schools/${selectedSchool?.name}`);
         const data = await response.json();
-        setAccentColor(data.primary_color);
-        setTextColor(data.text_color);
+        setSelectedColors({accent: data.primary_color, text: data.text_color})
+        setLogoURL(
+       `http://127.0.0.1:8000${data.logo_url}`
+        );
       } catch (error) {
         console.error("Error fetching colors:", error);
       }
@@ -44,24 +45,28 @@ const SiteNavbar: React.FC = () => {
   }, []);
 
   return (
-    <Navbar expand="lg" className="color-transition" style={{ backgroundColor: accentColor, color: textColor }}>
-      <Container className="justify-between">
-        <Navbar.Brand href="/">Study Spaces</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <NavDropdown title="Select School" id="basic-nav-dropdown">
-              {schools.map((school, index) => (
-                <NavDropdown.Item
-                  key={index}
-                  onClick={() => setSelectedSchool({ name: school })}
-                >
-                  {school}
-                </NavDropdown.Item>
-              ))}
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
+    <Navbar expand="lg" className="color-transition" style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
+      <Container className="d-flex justify-content-between align-items-center">
+        <Navbar.Brand href="/" className="text-left" style={{ color: selectedColors?.text }}>
+          Study Spaces
+        </Navbar.Brand>
+        
+        {logoURL && (
+          <Image src={logoURL} alt="School Logo" width={"150px"} className="mx-auto" />
+        )}
+        
+        <Nav>
+          <NavDropdown title="Select School" id="basic-nav-dropdown" align="end">
+            {schools.map((school, index) => (
+              <NavDropdown.Item
+                key={index}
+                onClick={() => setSelectedSchool({ name: school })}
+              >
+                {school}
+              </NavDropdown.Item>
+            ))}
+          </NavDropdown>
+        </Nav>
       </Container>
     </Navbar>
   );

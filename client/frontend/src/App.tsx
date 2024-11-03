@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSchool } from "./hooks/SchoolContextProvider";
 import Navbar from "./components/SiteNavbar";
+import SpacesList from "./components/SpacesList";
+import { Container } from "react-bootstrap";
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,10 +20,12 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="text-center">
-        <p>Test! {message}</p>
-        <p>Current School : {selectedSchool?.name}</p>
-      </div>
+      <Container className="flex">
+        <SpacesList/>
+        <div>
+          <p>Test</p>
+        </div>
+      </Container>
     </>
   );
 }
