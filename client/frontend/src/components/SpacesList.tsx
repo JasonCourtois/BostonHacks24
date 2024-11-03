@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const SpacesList: React.FC = () => {
   const [spaces, setSpaces] = useState<string[] | undefined>(undefined);
-  const { selectedSchool, selectedSpace, setSelectedSpace, selectedColors } = useSchool();
+  const { selectedSchool, setSelectedSpace, selectedColors } = useSchool();
 
   useEffect(() => {
     if (!selectedSchool?.name) {
@@ -30,7 +30,7 @@ const SpacesList: React.FC = () => {
     <div style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
       <p>Select a Space!</p>
       {spaces && spaces.map((space, index) => (
-        <p key={index}>{space}</p>
+        <p key={index} onClick={() => setSelectedSpace({name: space})}>{space}</p>
       ))}
     </div>
   );

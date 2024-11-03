@@ -3,7 +3,7 @@ import { useSchool } from "../hooks/SchoolContextProvider";
 import { Nav, NavDropdown, Navbar, Container, Image } from "react-bootstrap";
 
 const SiteNavbar: React.FC = () => {
-  const { selectedSchool, setSelectedSchool, selectedColors, setSelectedColors } = useSchool();
+  const { selectedSchool, setSelectedSchool, selectedColors, setSelectedColors, setSelectedSpace } = useSchool();
   const [logoURL, setLogoURL] = useState("");
   const [schools, setSchools] = useState<string[]>([]);
 
@@ -22,6 +22,18 @@ const SiteNavbar: React.FC = () => {
         );
       } catch (error) {
         console.error("Error fetching colors:", error);
+      }
+
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/schools/${selectedSchool.name}/spaces`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setSelectedSpace({name: data[0]})
+      } catch (error) {
+        console.error("Error fetching schools:", error);
       }
     };
     fetchColors();
@@ -46,27 +58,23 @@ const SiteNavbar: React.FC = () => {
 
   return (
     <Navbar expand="lg" className="color-transition" style={{ backgroundColor: selectedColors?.accent, color: selectedColors?.text }}>
-      <Container className="d-flex justify-content-between align-items-center">
-        <Navbar.Brand href="/" className="text-left" style={{ color: selectedColors?.text }}>
-          Study Spaces
-        </Navbar.Brand>
-        
-        {logoURL && (
-          <Image src={logoURL} alt="School Logo" width={"150px"} className="mx-auto" />
-        )}
-        
-        <Nav>
-          <NavDropdown title="Select School" id="basic-nav-dropdown" align="end">
-            {schools.map((school, index) => (
-              <NavDropdown.Item
-                key={index}
-                onClick={() => setSelectedSchool({ name: school })}
-              >
-                {school}
-              </NavDropdown.Item>
-            ))}
-          </NavDropdown>
-        </Nav>
+      <Container>
+      <Navbar.Brand href="/">Study Spaces</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <NavDropdown title="Select School" id="basic-nav-dropdown">
+              {schools.map((school, index) => (
+                <NavDropdown.Item
+                  key={index}
+                  onClick={() => {setSelectedSchool({ name: school })}}
+                >
+                  {school}
+                </NavDropdown.Item>
+              ))}
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
