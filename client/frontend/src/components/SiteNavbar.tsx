@@ -30,7 +30,6 @@ const SiteNavbar: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data)
         setSelectedSpace({name: data[0]})
       } catch (error) {
         console.error("Error fetching schools:", error);

@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import CircularProgress from "./CircularProgress";
 
 interface StudySpaceData {
   name: string;
@@ -30,12 +31,12 @@ interface FormattedData {
 }
 
 const SpaceData: React.FC = () => {
-  const { selectedSpace, selectedSchool } = useSchool();
+  const { selectedSpace, selectedSchool, selectedColors } = useSchool();
   const [spaceData, setSpaceData] = useState<StudySpaceData | null>(null);
   const today = new Date();
   const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
   const [selectedDay, setSelectedDay] = useState(currentDay);
-  const [formatData, setFormatData] = useState<FormattedData[]>([]); // Updated state initialization
+  const [formatData, setFormatData] = useState<FormattedData[]>([]);
 
   useEffect(() => {
     if (!selectedSchool?.name || !selectedSpace?.name) {
@@ -47,9 +48,11 @@ const SpaceData: React.FC = () => {
         const response = await fetch(
           `http://127.0.0.1:8000/api/schools/${selectedSchool?.name}/spaces/${selectedSpace?.name}`
         );
+        if (response.status !== 200) {
+          return;
+        }
         const data = await response.json();
         setSpaceData(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching colors:", error);
       }
@@ -59,20 +62,18 @@ const SpaceData: React.FC = () => {
 
   useEffect(() => {
     if (spaceData) {
-      const formattedData: FormattedData[] = []; // Define the type here
+      const formattedData: FormattedData[] = [];
       const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-      for (let day in spaceData.week_history) {
-        spaceData.week_history[day].forEach((value, index) => {
-          formattedData.push({
-            hour: hours[index],
-            day: day,
-            value: value,
-          });
+      spaceData.week_history[selectedDay].forEach((value, index) => {
+        formattedData.push({
+          hour: hours[index],
+          day: selectedDay,
+          value: value,
         });
-      }
+      });
       setFormatData(formattedData);
     }
-  }, [spaceData]); // Trigger only when spaceData changes
+  }, [spaceData]);
 
   if (!spaceData) {
     return (
@@ -80,25 +81,29 @@ const SpaceData: React.FC = () => {
         <p>Please Select A Space!</p>
       </div>
     );
-  } else {
-    console.log(spaceData);
   }
 
   return (
     <div className="flex flex-col w-full">
       <div className="flex gap-10">
         <p>{spaceData.name}</p>
-        <p>{(spaceData.current_count / spaceData.max_capacity) * 100}</p>
+        <CircularProgress percentage={(spaceData.current_count / spaceData.max_capacity) * 100}/>
       </div>
       <div className="w-full">
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={formatData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="hour" />
-            <YAxis />
+            <YAxis domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
             <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#007bff" />
+            <Legend
+              formatter={(value) => (
+                <span style={{ color: selectedColors?.text }}> {/* Change legend color here */}
+                  {value}
+                </span>
+              )}
+            />
+            <Bar dataKey="value" fill={selectedColors?.accent} name="Percent Used"/> {/* Bar color */}
           </BarChart>
         </ResponsiveContainer>
       </div>
