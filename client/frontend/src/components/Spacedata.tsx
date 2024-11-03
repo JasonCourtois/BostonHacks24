@@ -39,6 +39,7 @@ const SpaceData: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState(currentDay);
   const [formatData, setFormatData] = useState<FormattedData[]>([]);
   const [logoURL, setLogoURL] = useState("");
+  const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   useEffect(() => {
     if (!selectedSchool) {
@@ -104,20 +105,21 @@ const SpaceData: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex gap-10 mb-3">
+    <div className="md:ml-5 flex flex-col w-full">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-10 mb-3">
+      {logoURL && <Image src={logoURL} alt="School Logo" className="w-[200px] h-[100px] md:w-[300px] md:h-auto" />}
         <div>
-          <p>Current {spaceData.name} Usage:</p>
+          <p className="font-semibold">Current {spaceData.name} Usage:</p>
           <CircularProgress
             percentage={
               (spaceData.current_count / spaceData.max_capacity) * 100
             }
           />
         </div>
-
-        {logoURL && <Image src={logoURL} alt="School Logo" width={"300px"} />}
+        
       </div>
-      <div className="w-full">
+      <div className="w-full flex flex-col">
+        <p className="text-lg font font-semibold">Last <span>{currentDay}'s</span> Usage:</p>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={formatData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -128,7 +130,6 @@ const SpaceData: React.FC = () => {
               formatter={(value) => (
                 <span style={{ color: selectedColors?.text }}>
                   {" "}
-                  {/* Change legend color here */}
                   {value}
                 </span>
               )}

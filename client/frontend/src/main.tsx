@@ -6,7 +6,7 @@ import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <div className="w-screen h-screen m-0 p-0 bg-gray-100">
+    <div className="w-screen h-screen m-0 p-0 bg-gray-200">
     <SchoolProvider>
       <App />
     </SchoolProvider>
