@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSchool } from "./hooks/SchoolContextProvider";
 import Navbar from "./components/ui/SiteNavbar";
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [message, setMessage] = useState("");
